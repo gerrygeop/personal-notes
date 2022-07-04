@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import autoBind from 'auto-bind';
 
 class NoteInput extends Component {
    constructor(props) {
@@ -10,9 +11,7 @@ class NoteInput extends Component {
          limit: 50,
       }
 
-      this.onTitleChangeHandler = this.onTitleChangeHandler.bind(this);
-      this.onBodyChangeHandler = this.onBodyChangeHandler.bind(this);
-      this.onSubmitEventHandler = this.onSubmitEventHandler.bind(this);
+      autoBind(this);
    }
 
    onTitleChangeHandler(event) {
@@ -56,8 +55,8 @@ class NoteInput extends Component {
       return (
          <form className="note__form" onSubmit={this.onSubmitEventHandler}>
             <div className="note__form__limit-info">Sisa karakter <span>{this.state.limit}</span></div>
-            <input type="text" placeholder="Title" value={this.state.title} onChange={this.onTitleChangeHandler} />
-            <textarea placeholder="Write your notes..." rows="5" value={this.state.body} onChange={this.onBodyChangeHandler}></textarea>
+            <input type="text" placeholder="Title" required value={this.state.title} onChange={this.onTitleChangeHandler} />
+            <textarea placeholder="Write your notes..." rows="5" required value={this.state.body} onChange={this.onBodyChangeHandler}></textarea>
             <button type="submit" className="btn btn--primary">Simpan</button>
          </form>
       )

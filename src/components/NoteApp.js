@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import autoBind from 'auto-bind';
 import { getData } from '../utils/index';
 import NoteInput from './NoteInput';
 import NoteList from './NoteList';
@@ -13,10 +14,7 @@ class NoteApp extends Component {
          query: '',
       }
 
-      this.onDeleteEventHandler = this.onDeleteEventHandler.bind(this);
-      this.onArchiveEventHandler = this.onArchiveEventHandler.bind(this);
-      this.onAddNoteEventHandler = this.onAddNoteEventHandler.bind(this);
-      this.onSearchNoteEventHandler = this.onSearchNoteEventHandler.bind(this);
+      autoBind(this);
    }
 
    onDeleteEventHandler(id) {
