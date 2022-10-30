@@ -60,13 +60,30 @@ h2 {
    align-items: center;
    justify-content: space-between;
 
-   padding: 1rem 0;
+   margin-bottom: 2rem;
+   padding: 0.5rem 0;
    border-bottom: 2px solid #CBD5E1;
 }
-.note__header input {
-   width: 100%;
-   max-width: 24rem;
+
+.search-bar {
+   display: flex;
+   justify-content: center;
+   margin: 1rem 0;
 }
+.search-bar__input {
+   width: 100%;
+   max-width: 36rem;
+}
+
+.navigation ul li {
+   display: inline-block;
+   padding: 8px 16px;
+ }
+  
+ .navigation ul li a {
+   font-size: 28px;
+   color: black;
+ }
 
 .note__form {
    display: flex;
@@ -161,12 +178,12 @@ h2 {
 .card__body {
    font-size: 16px;
    color: #334155;
-   margin: 10px 0 16px 0;
+   margin: 10px 0 18px 0;
 }
 
 .card__footer {
    display: flex;
-   column-gap: 6px;
+   column-gap: 10px;
    align-items: center;
    justify-content: flex-end;
 }
