@@ -2,6 +2,7 @@ import { Component } from "react";
 import { useParams } from "react-router-dom";
 import { getNote } from "../utils/index";
 import NoteDetail from "../components/NoteDetail";
+import PropTypes from "prop-types";
 
 function DetailPageWrapper() {
    const { id } = useParams();
@@ -22,13 +23,12 @@ class DetailPage extends Component {
          return <p>Note not found!</p>;
       }
 
-      return (
-         <section>
-            <h2>Detail Catatan</h2>
-            <NoteDetail {...this.state.note} />
-         </section>
-      );
+      return <NoteDetail {...this.state.note} />;
    }
 }
+
+DetailPage.propType = {
+   id: PropTypes.number.isRequired,
+};
 
 export default DetailPageWrapper;

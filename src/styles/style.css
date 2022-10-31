@@ -85,6 +85,14 @@ h2 {
    color: black;
  }
 
+.note__detail {
+   display: flex;
+   flex-direction: column;
+   row-gap: 1rem;
+   max-width: 42rem;
+   margin: 3rem auto;
+}
+
 .note__form {
    display: flex;
    flex-direction: column;
@@ -169,7 +177,7 @@ h2 {
    font-size: 22px;
 }
 
-.card__date {
+.text__date {
    color: #475569;
    font-size: 14px;
    font-style: italic;

@@ -87,4 +87,17 @@ function deleteNote(id) {
    notes = notes.filter((note) => note.id !== id);
 }
 
-export { getData, getNote, showFormattedDate, addNote, deleteNote };
+function archiveNote(id) {
+   const archives = [...notes];
+   const index = notes.findIndex((note) => note.id === id);
+   notes[index].archived = archives[index].archived ? false : true;
+}
+
+export {
+   getData,
+   getNote,
+   showFormattedDate,
+   addNote,
+   deleteNote,
+   archiveNote,
+};

@@ -1,9 +1,10 @@
 import { Component } from "react";
 import autoBind from "auto-bind";
-import { getData, deleteNote } from "../utils/index";
+import { getData, deleteNote, archiveNote } from "../utils/index";
 import NoteList from "../components/NoteList";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar.js";
+import PropTypes from "prop-types";
 
 function HomePageWrapper() {
    const [searchParams, setSearchParams] = useSearchParams();
@@ -41,10 +42,13 @@ class HomePage extends Component {
    }
 
    onArchiveEventHandler(id) {
-      const archives = [...this.state.notes];
-      const index = this.state.notes.findIndex((note) => note.id === id);
-      archives[index].archived = archives[index].archived ? false : true;
-      this.setState({ notes: archives });
+      archiveNote(id);
+
+      this.setState(() => {
+         return {
+            notes: getData(),
+         };
+      });
    }
 
    onKeywordChangeHandler(keyword) {
@@ -58,6 +62,12 @@ class HomePage extends Component {
    }
 
    render() {
+      const notes = this.state.notes.filter((note) => {
+         return note.title
+            .toLowerCase()
+            .includes(this.state.keyword.toLowerCase());
+      });
+
       return (
          <section>
             <SearchBar
@@ -68,8 +78,7 @@ class HomePage extends Component {
             <h2>List Notes</h2>
             <NoteList
                key={"unarchived-notes"}
-               keyword={this.state.keyword}
-               notes={this.state.notes}
+               notes={notes}
                onArchive={this.onArchiveEventHandler}
                onDelete={this.onDeleteEventHandler}
             />
@@ -77,8 +86,7 @@ class HomePage extends Component {
             <h2>Notes Archived</h2>
             <NoteList
                key={"archived-notes"}
-               keyword={this.state.keyword}
-               notes={this.state.notes}
+               notes={notes}
                onArchive={this.onArchiveEventHandler}
                onDelete={this.onDeleteEventHandler}
                isArchived={true}
@@ -87,5 +95,10 @@ class HomePage extends Component {
       );
    }
 }
+
+HomePage.propType = {
+   defaultKeyword: PropTypes.string.isRequired,
+   keywordChange: PropTypes.func.isRequired,
+};
 
 export default HomePageWrapper;
