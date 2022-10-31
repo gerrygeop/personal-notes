@@ -3,11 +3,10 @@ import { showFormattedDate } from "../utils/index";
 
 function NoteDetail({ title, body, createdAt, archived }) {
    return (
-      <div>
-         <h3 className="card__title">{title}</h3>
-         <p>{showFormattedDate(createdAt)}</p>
+      <div className="note__detail">
+         <h1>{title}</h1>
+         <span className="text__date">{showFormattedDate(createdAt)}</span>
          <p>{body}</p>
-         <p>Archived: {archived}</p>
       </div>
    );
 }

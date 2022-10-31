@@ -8,7 +8,7 @@ function NoteCardBody({ id, title, body, createdAt }) {
          <h3 className="card__title">
             <Link to={`/${id}`}>{title}</Link>
          </h3>
-         <span className="card__date">{showFormattedDate(createdAt)}</span>
+         <span className="text__date">{showFormattedDate(createdAt)}</span>
          <p className="card__body">{body}</p>
       </div>
    );
