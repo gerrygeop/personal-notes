@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { FiHome, FiPlusCircle } from "react-icons/fi";
+import PropTypes from "prop-types";
+import { FiHome, FiPlusCircle, FiLogOut } from "react-icons/fi";
 
-function NoteHeader() {
+function NoteHeader({ logout }) {
    return (
-      <div className="note__header">
+      <header className="note__header">
          <h1>👾Nōto</h1>
 
          <nav className="navigation">
@@ -18,10 +19,19 @@ function NoteHeader() {
                      <FiPlusCircle />
                   </Link>
                </li>
+               <li>
+                  <button onClick={logout}>
+                     <FiLogOut />
+                  </button>
+               </li>
             </ul>
          </nav>
-      </div>
+      </header>
    );
 }
+
+NoteHeader.propTypes = {
+   logout: PropTypes.func.isRequired,
+};
 
 export default NoteHeader;

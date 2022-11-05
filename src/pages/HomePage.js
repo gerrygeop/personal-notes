@@ -75,7 +75,7 @@ class HomePage extends Component {
                keywordChange={this.onKeywordChangeHandler}
             />
 
-            <h2>List Notes</h2>
+            <h2 className="heading">List Notes</h2>
             <NoteList
                key={"unarchived-notes"}
                notes={notes}
@@ -83,7 +83,7 @@ class HomePage extends Component {
                onDelete={this.onDeleteEventHandler}
             />
 
-            <h2>Notes Archived</h2>
+            <h2 className="heading">Notes Archived</h2>
             <NoteList
                key={"archived-notes"}
                notes={notes}

@@ -42,7 +42,7 @@ input::placeholder, textarea::placeholder {
    color: #64748B;
 }
 
-h2 {
+.heading {
    padding-left: 10px;
    margin-bottom: 1rem;
    display: inline-block;
@@ -80,18 +80,32 @@ h2 {
    padding: 8px 16px;
  }
   
- .navigation ul li a {
+ .navigation ul li a, .navigation ul li button {
    font-size: 28px;
    color: black;
+   text-decoration: none;
+   border: none;
+   background-color: transparent;
+   cursor: pointer;
  }
 
-.note__detail {
-   display: flex;
-   flex-direction: column;
-   row-gap: 1rem;
+ .brand a {
+   text-decoration: none;
+ }
+
+ .backlink{
+   margin-top: 10px;
+ }
+
+ .container {
    max-width: 42rem;
    margin: 3rem auto;
 }
+
+ .flex-col {
+    display: flex;
+    flex-direction: column;
+ }
 
 .note__form {
    display: flex;
@@ -110,8 +124,16 @@ h2 {
    font-weight: bolder;
 }
 
-.note__form input, .note__form textarea {
+input, textarea {
    margin-bottom: 1rem;
+}
+
+.note__detail {
+   display: flex;
+   flex-direction: column;
+   row-gap: 1rem;
+   max-width: 42rem;
+   margin: 3rem auto;
 }
 
 .btn {
