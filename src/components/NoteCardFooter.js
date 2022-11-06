@@ -24,7 +24,7 @@ function NoteCardFooter({ id, onArchive, onDelete }) {
 }
 
 NoteCardFooter.protoTypes = {
-   id: PropTypes.number.isRequired,
+   id: PropTypes.string.isRequired,
    onArchive: PropTypes.func.isRequired,
    onDelete: PropTypes.func.isRequired,
 };

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FiHome, FiPlusCircle, FiLogOut } from "react-icons/fi";
+import { BiBookmarks } from "react-icons/bi";
 
 function NoteHeader({ logout }) {
    return (
@@ -12,6 +13,11 @@ function NoteHeader({ logout }) {
                <li>
                   <Link to="/">
                      <FiHome />
+                  </Link>
+               </li>
+               <li>
+                  <Link to="/archive">
+                     <BiBookmarks />
                   </Link>
                </li>
                <li>

@@ -17,7 +17,7 @@ function NoteCard({ id, title, body, createdAt, onArchive, onDelete }) {
 }
 
 NoteCard.protoTypes = {
-   id: PropTypes.number.isRequired,
+   id: PropTypes.string.isRequired,
    title: PropTypes.string.isRequired,
    body: PropTypes.string.isRequired,
    createdAt: PropTypes.string.isRequired,

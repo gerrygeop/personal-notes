@@ -6,7 +6,7 @@ function NoteCardBody({ id, title, body, createdAt }) {
    return (
       <div>
          <h3 className="card__title">
-            <Link to={`/${id}`}>{title}</Link>
+            <Link to={`/note/${id}`}>{title}</Link>
          </h3>
          <span className="text__date">{showFormattedDate(createdAt)}</span>
          <p className="card__body">{body}</p>
@@ -15,7 +15,7 @@ function NoteCardBody({ id, title, body, createdAt }) {
 }
 
 NoteCardBody.protoTypes = {
-   id: PropTypes.number.isRequired,
+   id: PropTypes.string.isRequired,
    title: PropTypes.string.isRequired,
    body: PropTypes.string.isRequired,
    createdAt: PropTypes.string.isRequired,

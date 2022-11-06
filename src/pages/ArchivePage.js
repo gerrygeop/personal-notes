@@ -1,12 +1,16 @@
 import { Component } from "react";
 import autoBind from "auto-bind";
-import { getActiveNotes, deleteNote, archiveNote } from "../utils/network-data";
+import {
+   getArchivedNotes,
+   deleteNote,
+   unarchiveNote,
+} from "../utils/network-data";
 import NoteList from "../components/NoteList";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar.js";
 import PropTypes from "prop-types";
 
-function HomePageWrapper() {
+function ArchivePageWrapper() {
    const [searchParams, setSearchParams] = useSearchParams();
    const keyword = searchParams.get("keyword");
 
@@ -15,11 +19,14 @@ function HomePageWrapper() {
    }
 
    return (
-      <HomePage defaultKeyword={keyword} keywordChange={changeSearchParams} />
+      <ArchivePage
+         defaultKeyword={keyword}
+         keywordChange={changeSearchParams}
+      />
    );
 }
 
-class HomePage extends Component {
+class ArchivePage extends Component {
    constructor(props) {
       super(props);
 
@@ -32,7 +39,7 @@ class HomePage extends Component {
    }
 
    async componentDidMount() {
-      const { data } = await getActiveNotes();
+      const { data } = await getArchivedNotes();
 
       this.setState(() => {
          return {
@@ -43,7 +50,7 @@ class HomePage extends Component {
 
    async onDeleteEventHandler(id) {
       await deleteNote(id);
-      const { data } = await getActiveNotes();
+      const { data } = await getArchivedNotes();
 
       this.setState(() => {
          return {
@@ -53,8 +60,8 @@ class HomePage extends Component {
    }
 
    async onArchiveEventHandler(id) {
-      await archiveNote(id);
-      const { data } = await getActiveNotes();
+      await unarchiveNote(id);
+      const { data } = await getArchivedNotes();
 
       this.setState(() => {
          return {
@@ -87,21 +94,22 @@ class HomePage extends Component {
                keywordChange={this.onKeywordChangeHandler}
             />
 
-            <h2 className="heading">List Notes</h2>
+            <h2 className="heading">Notes Archived</h2>
             <NoteList
-               key={"unarchived-notes"}
+               key={"archived-notes"}
                notes={notes}
                onArchive={this.onArchiveEventHandler}
                onDelete={this.onDeleteEventHandler}
+               isArchived={true}
             />
          </section>
       );
    }
 }
 
-HomePage.propType = {
+ArchivePage.propType = {
    defaultKeyword: PropTypes.string.isRequired,
    keywordChange: PropTypes.func.isRequired,
 };
 
-export default HomePageWrapper;
+export default ArchivePageWrapper;

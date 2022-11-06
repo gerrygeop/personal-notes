@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes, Link } from "react-router-dom";
 import autoBind from "auto-bind";
 import HomePage from "../pages/HomePage";
+import ArchivePage from "../pages/ArchivePage";
 import AddPage from "../pages/AddPage";
 import DetailPage from "../pages/DetailPage";
 import RegisterPage from "../pages/RegisterPage";
@@ -88,8 +89,9 @@ class NoteApp extends React.Component {
             <main>
                <Routes>
                   <Route path="/" element={<HomePage />} />
+                  <Route path="/archive" element={<ArchivePage />} />
                   <Route path="/add" element={<AddPage />} />
-                  <Route path="/:id" element={<DetailPage />} />
+                  <Route path="/note/:id" element={<DetailPage />} />
                </Routes>
             </main>
          </div>
