@@ -9,18 +9,29 @@
    --color-accent-1: rgb(var(--accent), 0.6);
    --color-accent-2: rgb(var(--accent), 0.8);
    --color-accent-3: rgb(var(--accent), 0.9);
+
+   --bg-color: #F1F5F9;
+   --font-color: #1E293B;
+   --font-color-2: #475569;
 }
+
+[data-theme='dark'] {
+   --bg-color: #1E293B;
+   --font-color: #F1F5F9;
+	--font-color-2: #acaeb1;
+ }
 
 * {
    padding: 0;
    margin: 0;
    box-sizing: border-box;
    font-family: 'Roboto Mono', sans-serif;
+   transition: background 0.3s ease-in;
 }
 
 body {
-   background-color: #F1F5F9;
-   color: #1E293B;
+   background-color: var(--bg-color);
+   color: var(--font-color);
 }
 
 input, textarea {
@@ -51,12 +62,13 @@ input::placeholder, textarea::placeholder {
 
 .note {
    margin: 0 auto;
-   padding: 0 10px 40px 10px;
-   max-width: 80rem;
+   padding: 0 20px 40px 20px;
+   max-width: 60rem;
 }
 
 .note__header {
    display: flex;
+   flex-direction: column;
    align-items: center;
    justify-content: space-between;
 
@@ -77,24 +89,44 @@ input::placeholder, textarea::placeholder {
 
 .navigation ul li {
    display: inline-block;
-   padding: 8px 16px;
+   padding: 8px 12px;
+   margin: 0 10px;
+   border-radius: 10px;
+ }
+
+.navigation ul li:hover {
+   background-color: var(--color-primary-1);
  }
   
  .navigation ul li a, .navigation ul li button {
-   font-size: 28px;
-   color: black;
-   text-decoration: none;
-   border: none;
    background-color: transparent;
+   color: var(--font-color);
+   text-decoration: none;
+   font-size: 28px;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   border: none;
    cursor: pointer;
  }
 
  .brand a {
+   display: flex;
+   flex-wrap: nowrap;
+
+   margin-bottom: 10px;
+
    text-decoration: none;
+   color: var(--font-color);
  }
 
- .backlink{
-   margin-top: 10px;
+ .textlink{
+    margin-top: 10px;
+ }
+ .textlink a{
+   color: var(--font-color);
  }
 
  .container {
@@ -116,11 +148,10 @@ input::placeholder, textarea::placeholder {
 
 .note__form__limit-info {
    text-align: end;
-   color: #475569;
+   color: var(--font-color);
    margin-bottom: 8px;
 }
 .note__form__limit-info span {
-   color: #1E293B;
    font-weight: bolder;
 }
 
@@ -200,7 +231,7 @@ input, textarea {
 }
 
 .text__date {
-   color: #475569;
+   color: var(--font-color-2);
    font-size: 14px;
    font-style: italic;
 }
@@ -211,8 +242,21 @@ input, textarea {
    margin: 10px 0 18px 0;
 }
 
+.truncate-1 {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis; 
+}
+
+.truncate-3 {
+   display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
 .card__footer {
-   display: flex;
+	display: flex;
    column-gap: 10px;
    align-items: center;
    justify-content: flex-end;
@@ -229,6 +273,14 @@ input, textarea {
 }
 
 @media only screen and (min-width: 640px) {
+   .note__header {
+      flex-direction: row;
+   }
+
+   .brand a {
+      margin-bottom: 0;
+    }
+
    .grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
    }
@@ -241,7 +293,7 @@ input, textarea {
 }
 
 @media only screen and (min-width: 1280px) {
-   .grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+   .note {
+      padding: 0 10px 40px 10px;
    }
 }

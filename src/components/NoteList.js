@@ -1,7 +1,11 @@
+import React from "react";
 import NoteCard from "./NoteCard";
 import PropTypes from "prop-types";
+import LocaleContext from "../contexts/LocaleContext";
 
 function NoteList({ notes, onArchive, onDelete, isArchived = false }) {
+   const { locale } = React.useContext(LocaleContext);
+
    const notesList = notes.filter((note) =>
       isArchived ? note.archived === true : note.archived === false
    );
@@ -10,7 +14,7 @@ function NoteList({ notes, onArchive, onDelete, isArchived = false }) {
       <div className="grid">
          {notesList.length < 1 ? (
             <p className="note__empty">
-               Tidak ada catatan {isArchived ? "diarsip" : ""}
+               {locale === "en" ? "No note" : "Tidak ada catatan"}
             </p>
          ) : (
             notesList
@@ -19,6 +23,7 @@ function NoteList({ notes, onArchive, onDelete, isArchived = false }) {
                      key={note.id}
                      onArchive={onArchive}
                      onDelete={onDelete}
+                     isArchived={isArchived}
                      {...note}
                   />
                ))

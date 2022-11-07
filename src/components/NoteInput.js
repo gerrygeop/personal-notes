@@ -1,6 +1,7 @@
 import { Component } from "react";
 import autoBind from "auto-bind";
 import PropTypes from "prop-types";
+import { LocaleConsumer } from "../contexts/LocaleContext";
 
 class NoteInput extends Component {
    constructor(props) {
@@ -43,29 +44,45 @@ class NoteInput extends Component {
 
    render() {
       return (
-         <form className="note__form" onSubmit={this.onSubmitEventHandler}>
-            <div className="note__form__limit-info">
-               Sisa karakter <span>{this.state.limit}</span>
-            </div>
-            <input
-               type="text"
-               placeholder="Title"
-               required
-               value={this.state.title}
-               onChange={this.onTitleChangeHandler}
-            />
-            <textarea
-               placeholder="Write your notes..."
-               rows="5"
-               required
-               value={this.state.body}
-               onChange={this.onBodyChangeHandler}
-            ></textarea>
+         <LocaleConsumer>
+            {({ locale }) => {
+               return (
+                  <form
+                     className="note__form"
+                     onSubmit={this.onSubmitEventHandler}
+                  >
+                     <div className="note__form__limit-info">
+                        {locale === "en"
+                           ? "Remaining characters"
+                           : "Karakter yang tersisa"}{" "}
+                        <span>{this.state.limit}</span>
+                     </div>
+                     <input
+                        type="text"
+                        placeholder={locale === "en" ? "Title" : "Judul"}
+                        required
+                        value={this.state.title}
+                        onChange={this.onTitleChangeHandler}
+                     />
+                     <textarea
+                        placeholder={
+                           locale === "en"
+                              ? "Write your notes..."
+                              : "Tulis catatan anda..."
+                        }
+                        rows="5"
+                        required
+                        value={this.state.body}
+                        onChange={this.onBodyChangeHandler}
+                     ></textarea>
 
-            <button type="submit" className="btn btn--primary">
-               Simpan
-            </button>
-         </form>
+                     <button type="submit" className="btn btn--primary">
+                        {locale === "en" ? "Save" : "Simpan"}
+                     </button>
+                  </form>
+               );
+            }}
+         </LocaleConsumer>
       );
    }
 }

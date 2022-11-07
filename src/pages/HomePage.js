@@ -1,107 +1,66 @@
-import { Component } from "react";
-import autoBind from "auto-bind";
+import React from "react";
 import { getActiveNotes, deleteNote, archiveNote } from "../utils/network-data";
 import NoteList from "../components/NoteList";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar.js";
-import PropTypes from "prop-types";
+import LocaleContext from "../contexts/LocaleContext";
 
-function HomePageWrapper() {
+function HomePage() {
    const [searchParams, setSearchParams] = useSearchParams();
-   const keyword = searchParams.get("keyword");
+   const [notes, setNotes] = React.useState([]);
+   const [loading, setLoading] = React.useState(true);
+   const [keyword, setKeyword] = React.useState(() => {
+      return searchParams.get("keyword") || "";
+   });
+   const { locale } = React.useContext(LocaleContext);
 
-   function changeSearchParams(keyword) {
-      setSearchParams({ keyword });
+   React.useEffect(() => {
+      getActiveNotes().then(({ data }) => {
+         setNotes(data);
+         setLoading(false);
+      });
+   }, []);
+
+   async function onDeleteEventHandler(id) {
+      await deleteNote(id);
+      const { data } = await getActiveNotes();
+      setNotes(data);
    }
 
+   async function onArchiveEventHandler(id) {
+      await archiveNote(id);
+      const { data } = await getActiveNotes();
+      setNotes(data);
+   }
+
+   function onKeywordChangeHandler(keyword) {
+      setKeyword(keyword);
+      setSearchParams(keyword);
+   }
+
+   const filteredNotes = notes.filter((note) => {
+      return note.title.toLowerCase().includes(keyword.toLowerCase());
+   });
+
    return (
-      <HomePage defaultKeyword={keyword} keywordChange={changeSearchParams} />
+      <section>
+         <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
+
+         <h2 className="heading">
+            {locale === "en" ? "List Notes" : "Daftar Catatan"}
+         </h2>
+         {loading ? (
+            <p>Loading...</p>
+         ) : (
+            <NoteList
+               key={"unarchived-notes"}
+               notes={filteredNotes}
+               onArchive={onArchiveEventHandler}
+               onDelete={onDeleteEventHandler}
+            />
+         )}
+      </section>
    );
 }
 
-class HomePage extends Component {
-   constructor(props) {
-      super(props);
-
-      this.state = {
-         notes: [],
-         keyword: props.defaultKeyword || "",
-      };
-
-      autoBind(this);
-   }
-
-   async componentDidMount() {
-      const { data } = await getActiveNotes();
-
-      this.setState(() => {
-         return {
-            notes: data,
-         };
-      });
-   }
-
-   async onDeleteEventHandler(id) {
-      await deleteNote(id);
-      const { data } = await getActiveNotes();
-
-      this.setState(() => {
-         return {
-            notes: data,
-         };
-      });
-   }
-
-   async onArchiveEventHandler(id) {
-      await archiveNote(id);
-      const { data } = await getActiveNotes();
-
-      this.setState(() => {
-         return {
-            notes: data,
-         };
-      });
-   }
-
-   onKeywordChangeHandler(keyword) {
-      this.setState(() => {
-         return {
-            keyword,
-         };
-      });
-
-      this.props.keywordChange(keyword);
-   }
-
-   render() {
-      const notes = this.state.notes.filter((note) => {
-         return note.title
-            .toLowerCase()
-            .includes(this.state.keyword.toLowerCase());
-      });
-
-      return (
-         <section>
-            <SearchBar
-               keyword={this.state.keyword}
-               keywordChange={this.onKeywordChangeHandler}
-            />
-
-            <h2 className="heading">List Notes</h2>
-            <NoteList
-               key={"unarchived-notes"}
-               notes={notes}
-               onArchive={this.onArchiveEventHandler}
-               onDelete={this.onDeleteEventHandler}
-            />
-         </section>
-      );
-   }
-}
-
-HomePage.propType = {
-   defaultKeyword: PropTypes.string.isRequired,
-   keywordChange: PropTypes.func.isRequired,
-};
-
-export default HomePageWrapper;
+export default HomePage;

@@ -1,6 +1,5 @@
 import React from "react";
-import { Route, Routes, Link } from "react-router-dom";
-import autoBind from "auto-bind";
+import { Route, Routes } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import ArchivePage from "../pages/ArchivePage";
 import AddPage from "../pages/AddPage";
@@ -9,94 +8,112 @@ import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
 import NoteHeader from "./NoteHeader";
 import { getUserLogged, putAccessToken } from "../utils/network-data";
+import ThemeContext from "../contexts/ThemeContext";
+import LocaleContext from "../contexts/LocaleContext";
 
-class NoteApp extends React.Component {
-   constructor(props) {
-      super(props);
+function NoteApp() {
+   const [authedUser, setAuthedUser] = React.useState(null);
+   // const [initializing, setInitializing] = React.useState(true);
+   const [locale, setLocale] = React.useState(
+      localStorage.getItem("locale") || "en"
+   );
+   const [theme, setTheme] = React.useState(
+      localStorage.getItem("theme") || "light"
+   );
 
-      this.state = {
-         authedUser: null,
-         initializing: true,
-      };
-
-      autoBind(this);
-   }
-
-   async onLoginSuccess({ accessToken }) {
+   async function onLoginSuccess({ accessToken }) {
       putAccessToken(accessToken);
       const { data } = await getUserLogged();
-
-      this.setState(() => {
-         return {
-            authedUser: data,
-         };
-      });
+      setAuthedUser(data);
+      // setInitializing(false);
    }
 
-   onLogout() {
-      this.setState(() => {
-         return {
-            authedUser: null,
-         };
-      });
+   const onLogout = () => {
+      setAuthedUser(null);
       putAccessToken("");
-   }
+   };
 
-   async componentDidMount() {
-      const { data } = await getUserLogged();
-
-      this.setState(() => {
-         return {
-            authedUser: data,
-            initializing: false,
-         };
+   const toggleLocale = () => {
+      setLocale((prevLocale) => {
+         const newLocale = prevLocale === "en" ? "id" : "en";
+         localStorage.setItem("locale", newLocale);
+         return newLocale;
       });
-   }
+   };
 
-   render() {
-      if (this.state.initializing) {
-         return null;
-      }
+   const localeContextValue = React.useMemo(() => {
+      return {
+         locale,
+         toggleLocale,
+      };
+   }, [locale]);
 
-      if (this.state.authedUser === null) {
-         return (
+   const toggleTheme = () => {
+      setTheme((prevTheme) => {
+         const newTheme = prevTheme === "light" ? "dark" : "light";
+         localStorage.setItem("theme", newTheme);
+         return newTheme;
+      });
+   };
+
+   const themeContextValue = React.useMemo(() => {
+      return {
+         theme,
+         toggleTheme,
+      };
+   }, [theme]);
+
+   React.useEffect(() => {
+      // setInitializing(false);
+      document.documentElement.setAttribute("data-theme", theme);
+      // getUserLogged().then(setAuthedUser);
+   }, [theme]);
+
+   // if (initializing) {
+   //    return null;
+   // }
+
+   return (
+      <ThemeContext.Provider value={themeContextValue}>
+         <LocaleContext.Provider value={localeContextValue}>
             <div className="note">
-               <header className="note__header">
-                  <h1 className="brand">
-                     <Link to="/">👾Nōto</Link>
-                  </h1>
-               </header>
+               <NoteHeader
+                  logout={onLogout}
+                  isLogin={authedUser === null ? false : true}
+               />
 
                <main>
-                  <Routes>
-                     <Route
-                        path="/*"
-                        element={
-                           <LoginPage loginSuccess={this.onLoginSuccess} />
-                        }
-                     />
-                     <Route path="/register" element={<RegisterPage />} />
-                  </Routes>
+                  {authedUser === null ? (
+                     <Routes>
+                        <Route
+                           path="/*"
+                           element={<LoginPage loginSuccess={onLoginSuccess} />}
+                        />
+                        <Route path="/register" element={<RegisterPage />} />
+                     </Routes>
+                  ) : (
+                     <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/archive" element={<ArchivePage />} />
+                        <Route path="/add" element={<AddPage />} />
+                        <Route path="/note/:id" element={<DetailPage />} />
+                        <Route
+                           path="/*"
+                           element={
+                              <p>
+                                 {locale === "en"
+                                    ? "Page not found!"
+                                    : "Halaman tidak ditemukan!"}
+                              </p>
+                           }
+                        />
+                     </Routes>
+                  )}
                </main>
             </div>
-         );
-      }
-
-      return (
-         <div className="note">
-            <NoteHeader logout={this.onLogout} />
-
-            <main>
-               <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/archive" element={<ArchivePage />} />
-                  <Route path="/add" element={<AddPage />} />
-                  <Route path="/note/:id" element={<DetailPage />} />
-               </Routes>
-            </main>
-         </div>
-      );
-   }
+         </LocaleContext.Provider>
+      </ThemeContext.Provider>
+   );
 }
 
 export default NoteApp;

@@ -2,7 +2,15 @@ import NoteCardBody from "./NoteCardBody";
 import NoteCardFooter from "./NoteCardFooter";
 import PropTypes from "prop-types";
 
-function NoteCard({ id, title, body, createdAt, onArchive, onDelete }) {
+function NoteCard({
+   id,
+   title,
+   body,
+   createdAt,
+   onArchive,
+   onDelete,
+   isArchived,
+}) {
    return (
       <div className="card">
          <NoteCardBody
@@ -11,7 +19,12 @@ function NoteCard({ id, title, body, createdAt, onArchive, onDelete }) {
             createdAt={createdAt}
             body={body}
          />
-         <NoteCardFooter id={id} onArchive={onArchive} onDelete={onDelete} />
+         <NoteCardFooter
+            id={id}
+            onArchive={onArchive}
+            onDelete={onDelete}
+            isArchived={isArchived}
+         />
       </div>
    );
 }
@@ -23,6 +36,7 @@ NoteCard.protoTypes = {
    createdAt: PropTypes.string.isRequired,
    onArchive: PropTypes.func.isRequired,
    onDelete: PropTypes.func.isRequired,
+   isArchived: PropTypes.bool,
 };
 
 export default NoteCard;

@@ -5,11 +5,11 @@ import PropTypes from "prop-types";
 function NoteCardBody({ id, title, body, createdAt }) {
    return (
       <div>
-         <h3 className="card__title">
+         <h3 className="card__title truncate-1">
             <Link to={`/note/${id}`}>{title}</Link>
          </h3>
          <span className="text__date">{showFormattedDate(createdAt)}</span>
-         <p className="card__body">{body}</p>
+         <p className="card__body truncate-3">{body}</p>
       </div>
    );
 }

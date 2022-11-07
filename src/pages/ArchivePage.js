@@ -1,5 +1,4 @@
-import { Component } from "react";
-import autoBind from "auto-bind";
+import React from "react";
 import {
    getArchivedNotes,
    deleteNote,
@@ -8,108 +7,65 @@ import {
 import NoteList from "../components/NoteList";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar.js";
-import PropTypes from "prop-types";
+import LocaleContext from "../contexts/LocaleContext";
 
-function ArchivePageWrapper() {
+function ArchivePage() {
    const [searchParams, setSearchParams] = useSearchParams();
-   const keyword = searchParams.get("keyword");
+   const [notes, setNotes] = React.useState([]);
+   const [loading, setLoading] = React.useState(true);
+   const [keyword, setKeyword] = React.useState(() => {
+      return searchParams.get("keyword") || "";
+   });
+   const { locale } = React.useContext(LocaleContext);
 
-   function changeSearchParams(keyword) {
-      setSearchParams({ keyword });
+   React.useEffect(() => {
+      getArchivedNotes().then(({ data }) => {
+         setNotes(data);
+         setLoading(false);
+      });
+   }, []);
+
+   async function onDeleteEventHandler(id) {
+      await deleteNote(id);
+      const { data } = await getArchivedNotes();
+      setNotes(data);
    }
 
+   async function onArchiveEventHandler(id) {
+      await unarchiveNote(id);
+      const { data } = await getArchivedNotes();
+      setNotes(data);
+   }
+
+   function onKeywordChangeHandler(keyword) {
+      setKeyword(keyword);
+      setSearchParams(keyword);
+   }
+
+   const filteredNotes = notes.filter((note) => {
+      return note.title.toLowerCase().includes(keyword.toLowerCase());
+   });
+
    return (
-      <ArchivePage
-         defaultKeyword={keyword}
-         keywordChange={changeSearchParams}
-      />
+      <section>
+         <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
+
+         <h2 className="heading">
+            {locale === "en" ? "Archived Notes" : "Catatan yang diarsipkan"}
+         </h2>
+         {loading ? (
+            <p>Loading...</p>
+         ) : (
+            <NoteList
+               key={"archived-notes"}
+               notes={filteredNotes}
+               onArchive={onArchiveEventHandler}
+               onDelete={onDeleteEventHandler}
+               isArchived={true}
+            />
+         )}
+      </section>
    );
 }
 
-class ArchivePage extends Component {
-   constructor(props) {
-      super(props);
-
-      this.state = {
-         notes: [],
-         keyword: props.defaultKeyword || "",
-      };
-
-      autoBind(this);
-   }
-
-   async componentDidMount() {
-      const { data } = await getArchivedNotes();
-
-      this.setState(() => {
-         return {
-            notes: data,
-         };
-      });
-   }
-
-   async onDeleteEventHandler(id) {
-      await deleteNote(id);
-      const { data } = await getArchivedNotes();
-
-      this.setState(() => {
-         return {
-            notes: data,
-         };
-      });
-   }
-
-   async onArchiveEventHandler(id) {
-      await unarchiveNote(id);
-      const { data } = await getArchivedNotes();
-
-      this.setState(() => {
-         return {
-            notes: data,
-         };
-      });
-   }
-
-   onKeywordChangeHandler(keyword) {
-      this.setState(() => {
-         return {
-            keyword,
-         };
-      });
-
-      this.props.keywordChange(keyword);
-   }
-
-   render() {
-      const notes = this.state.notes.filter((note) => {
-         return note.title
-            .toLowerCase()
-            .includes(this.state.keyword.toLowerCase());
-      });
-
-      return (
-         <section>
-            <SearchBar
-               keyword={this.state.keyword}
-               keywordChange={this.onKeywordChangeHandler}
-            />
-
-            <h2 className="heading">Notes Archived</h2>
-            <NoteList
-               key={"archived-notes"}
-               notes={notes}
-               onArchive={this.onArchiveEventHandler}
-               onDelete={this.onDeleteEventHandler}
-               isArchived={true}
-            />
-         </section>
-      );
-   }
-}
-
-ArchivePage.propType = {
-   defaultKeyword: PropTypes.string.isRequired,
-   keywordChange: PropTypes.func.isRequired,
-};
-
-export default ArchivePageWrapper;
+export default ArchivePage;

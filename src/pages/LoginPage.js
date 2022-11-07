@@ -16,7 +16,7 @@ function LoginPage({ loginSuccess }) {
    return (
       <section className="container">
          <LoginForm login={onLogin} />
-         <p className="backlink">
+         <p className="textlink">
             <Link to="/register">Buat akun baru</Link>
          </p>
       </section>

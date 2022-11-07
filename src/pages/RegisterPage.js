@@ -17,7 +17,7 @@ function RegisterPage() {
    return (
       <section className="container">
          <RegisterForm register={onRegisterHandler} />
-         <p className="backlink">
+         <p className="textlink">
             Kembali ke <Link to="/">Masuk</Link>
          </p>
       </section>
