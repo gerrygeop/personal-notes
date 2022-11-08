@@ -13,7 +13,7 @@ import LocaleContext from "../contexts/LocaleContext";
 
 function NoteApp() {
    const [authedUser, setAuthedUser] = React.useState(null);
-   // const [initializing, setInitializing] = React.useState(true);
+   const [initializing, setInitializing] = React.useState(true);
    const [locale, setLocale] = React.useState(
       localStorage.getItem("locale") || "en"
    );
@@ -24,8 +24,9 @@ function NoteApp() {
    async function onLoginSuccess({ accessToken }) {
       putAccessToken(accessToken);
       const { data } = await getUserLogged();
-      setAuthedUser(data);
-      // setInitializing(false);
+      setAuthedUser(() => {
+         return data;
+      });
    }
 
    const onLogout = () => {
@@ -64,14 +65,17 @@ function NoteApp() {
    }, [theme]);
 
    React.useEffect(() => {
-      // setInitializing(false);
+      getUserLogged().then(({ data }) => {
+         setAuthedUser(data);
+         setInitializing(false);
+      });
+
       document.documentElement.setAttribute("data-theme", theme);
-      // getUserLogged().then(setAuthedUser);
    }, [theme]);
 
-   // if (initializing) {
-   //    return null;
-   // }
+   if (initializing) {
+      return null;
+   }
 
    return (
       <ThemeContext.Provider value={themeContextValue}>
